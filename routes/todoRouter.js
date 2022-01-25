@@ -1,23 +1,17 @@
 const router = require('express').Router()
-const controller = require('../controller/routerController')
-const cors = require('cors');
+const controller = require('../controller/todoController')
+const auth = require('../controller/authController');
 
-const whitelist = {
-    origin: 'http://localhost:3000'
-}
 
-router.use(cors(whitelist));
 
-router.post('/users', controller.newuser);
+router.get('/todos', auth, controller.showtodos);
 
-router.get('/todos', controller.auth, controller.showtodos);
+router.post('/todos', auth, controller.newtodo);
 
-router.post('/todos', controller.auth, controller.newtodo);
+router.put('/todos/:id', auth, controller.attTodo);
 
-router.put('/todos/:id', controller.auth, controller.attTodo);
+router.patch('/todos/:id/done', auth, controller.doneTodo);
 
-router.patch('/todos/:id/done', controller.auth, controller.doneTodo);
-
-router.delete('/todos/:id', controller.auth, controller.deleteTodo);
+router.delete('/todos/:id', auth, controller.deleteTodo);
 
 module.exports = router

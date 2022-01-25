@@ -1,42 +1,4 @@
-
-const models = require('../model/User')
 const TodoModel = require('../model/Todo')
-
-const auth = (request, response, next) => {   
-    const { username } = request.headers;
-
-    models.users.forEach(user=>{
-        if(user.username === username){
-            request.user = user  
-        }
-    })
-
-    if(!request.user) return response.status(400).json({error: 'User not found'})
-
-    next()
-}
-
-const newuser = (request, response) => {
-
-    const { name, username } = request.body;
-
-    let userExist = ''
-
-    models.users.forEach(user=>{
-        if(user.username === username){
-            userExist += 'true'
-        }else{
-            userExist += 'false'
-        } 
-    })
-
-    if(userExist === 'true') return response.status(400).json({error: 'User Already Exists!'}) 
-
-    models.newuser(name, username)
-
-    return response.status(201).send(models.getOne(username))
-
-}
 
 const showtodos = (request, response) => {
 
@@ -103,14 +65,14 @@ const deleteTodo = (request, response) => {
         todo.id === id
     )
 
+    if(!todoid) return response.status(400).json({error: 'Todo not found'})
+
     user.todos.splice(todoid, 1)
 
     return response.status(200).json({todos: user.todos})
 }
 
 module.exports = {
-    auth,
-    newuser,
     showtodos,
     newtodo,
     attTodo,

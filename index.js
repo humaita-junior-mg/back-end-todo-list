@@ -1,7 +1,19 @@
 const express = require('express');
 const app = express();
-const routes = require('./routes/todoRouter')
+const todoRouter = require('./routes/todoRouter')
+const userRouter = require('./routes/userRouter')
+const cors = require('cors');
 
-app.use('/', express.json(), routes)
+const whitelist = {
+    origin: 'http://localhost:3000'
+}
+
+app.use(cors(whitelist));
+
+app.use(express.json())
+
+app.use('/', userRouter)
+
+app.use('/', todoRouter)
 
 app.listen(3000)
